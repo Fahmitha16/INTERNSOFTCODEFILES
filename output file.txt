@@ -1,0 +1,308 @@
+Python 3.7.6 (default, Jan  8 2020, 20:23:39) [MSC v.1916 64 bit (AMD64)]
+Type "copyright", "credits" or "license" for more information.
+
+IPython 7.12.0 -- An enhanced Interactive Python.
+
+Restarting kernel... 
+
+
+ 
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+data = pd.read_csv("advertising.csv")
+data.head()
+Out[2]: 
+      TV  Radio  Newspaper  Sales
+0  230.1   37.8       69.2   22.1
+1   44.5   39.3       45.1   10.4
+2   17.2   45.9       69.3   12.0
+3  151.5   41.3       58.5   16.5
+4  180.8   10.8       58.4   17.9
+
+fig , axs = plt.subplots(1,3,sharey = True)
+data.plot(kind='scatter',x='TV',y='Sales',ax=axs[0],figsize=(14,7))
+data.plot(kind='scatter',x='Radio',y='Sales',ax=axs[1] )
+data.plot(kind='scatter',x='Newspaper',y='Sales',ax=axs[2] )
+Out[3]: <matplotlib.axes._subplots.AxesSubplot at 0x27b74045fc8>
+
+
+feature_cols = ['TV']
+X = data[feature_cols]
+y = data.Sales
+
+
+from sklearn.linear_model import LinearRegression
+lr = LinearRegression()
+lr.fit(X, y)
+Out[5]: LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None, normalize=False)
+
+print(lr.intercept_)
+6.9748214882298925
+
+print(lr.coef_)
+[0.05546477]
+
+result = 6.97+0.0554(50)
+Traceback (most recent call last):
+
+  File "<ipython-input-8-eba17e4746a8>", line 1, in <module>
+    result = 6.97+0.0554(50)
+
+TypeError: 'float' object is not callable
+
+
+result = 6.97+0.0554*50
+
+print(result)
+9.74
+
+X_new = pd.DataFrame({'TV':[data.TV.min(),data.TV.max() ]})
+
+X_new.head()
+Out[12]: 
+      TV
+0    0.7
+1  296.4
+
+preds = lr.predict(X_new)
+preds
+Out[13]: array([ 7.01364683, 23.41457946])
+
+data.plot(kind = 'scatter',x='TV',y='Sales')
+Out[14]: <matplotlib.axes._subplots.AxesSubplot at 0x27b79ef3c88>
+
+data.plot(kind = 'scatter',x='TV',y='Sales')
+plt.plot(X_new,preds,c='red',linewidth = 3)
+Out[15]: [<matplotlib.lines.Line2D at 0x27b7a0961c8>]
+
+data.plot(kind = 'scatter',x='TV',y='Sales')
+plt.plot(X_new,preds,c='red',linewidth = 1)
+Out[16]: [<matplotlib.lines.Line2D at 0x27b79f8f6c8>]
+
+data.plot(kind = 'scatter',x='TV',y='Sales')
+plt.plot(X_new,preds,c='red',linewidth = 3)
+Out[17]: [<matplotlib.lines.Line2D at 0x27b7a01a3c8>]
+
+lr = smf.ols(formula = 'Sales ~ TV',data = data.fit())
+lr.conf_int()
+Traceback (most recent call last):
+
+  File "<ipython-input-18-c1d3c33ce7da>", line 1, in <module>
+    lr = smf.ols(formula = 'Sales ~ TV',data = data.fit())
+
+NameError: name 'smf' is not defined
+
+
+import statsmodels.formula.api as smf
+lr = smf.ols(formula = 'Sales ~ TV',data = data.fit())
+lr.conf_int()
+Traceback (most recent call last):
+
+  File "<ipython-input-19-d780a3c60ad4>", line 2, in <module>
+    lr = smf.ols(formula = 'Sales ~ TV',data = data.fit())
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\generic.py", line 5274, in __getattr__
+    return object.__getattribute__(self, name)
+
+AttributeError: 'DataFrame' object has no attribute 'fit'
+
+
+
+lr.pvalues
+Traceback (most recent call last):
+
+  File "<ipython-input-20-f61d743ba824>", line 1, in <module>
+    lr.pvalues
+
+AttributeError: 'LinearRegression' object has no attribute 'pvalues'
+
+
+
+lm.pvalues
+Traceback (most recent call last):
+
+  File "<ipython-input-21-05ea24a0de35>", line 1, in <module>
+    lm.pvalues
+
+NameError: name 'lm' is not defined
+
+
+import statsmodels.formula.api as smf
+lm = smf.ols(formula = 'Sales ~ TV',data = data.fit())
+lm.conf_int()
+Traceback (most recent call last):
+
+  File "<ipython-input-22-1fbd4a69b79d>", line 2, in <module>
+    lm = smf.ols(formula = 'Sales ~ TV',data = data.fit())
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\generic.py", line 5274, in __getattr__
+    return object.__getattribute__(self, name)
+
+AttributeError: 'DataFrame' object has no attribute 'fit'
+
+
+import statsmodels.formula.api as smf
+lm = smf.ols(formula = 'Sales ~ TV',data = data).fit()
+lm.conf_int()
+Out[23]: 
+                  0         1
+Intercept  6.338740  7.610903
+TV         0.051727  0.059203
+
+lm.pvalues
+Out[24]: 
+Intercept    5.027719e-54
+TV           7.927912e-74
+dtype: float64
+
+
+lm.rsquared
+Out[25]: 0.8121757029987414
+
+
+feature_cols = ['TV','Radio','Newspaper']
+X = data[feature_cols]
+y = data.Sales
+
+
+
+
+lr = LinearRegression()
+lr.fit(X,y)
+Out[26]: LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None, normalize=False)
+
+print(lr.intercept_)
+print(lr.coef_)
+4.625124078808653
+[0.05444578 0.10700123 0.00033566]
+
+lm = smf.ols(formula='Salse ~ TV+Radio+Newspaper',data=data).fit()
+lm.conf_int()
+lm.sumary()
+Traceback (most recent call last):
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\patsy\compat.py", line 36, in call_and_wrap_exc
+    return f(*args, **kwargs)
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\patsy\eval.py", line 166, in eval
+    + self._namespaces))
+
+  File "<string>", line 1, in <module>
+
+NameError: name 'Salse' is not defined
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+
+  File "<ipython-input-28-fd6274a302c8>", line 1, in <module>
+    lm = smf.ols(formula='Salse ~ TV+Radio+Newspaper',data=data).fit()
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\statsmodels\base\model.py", line 169, in from_formula
+    missing=missing)
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\statsmodels\formula\formulatools.py", line 65, in handle_formula_data
+    NA_action=na_action)
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\patsy\highlevel.py", line 310, in dmatrices
+    NA_action, return_type)
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\patsy\highlevel.py", line 165, in _do_highlevel_design
+    NA_action)
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\patsy\highlevel.py", line 70, in _try_incr_builders
+    NA_action)
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\patsy\build.py", line 696, in design_matrix_builders
+    NA_action)
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\patsy\build.py", line 443, in _examine_factor_types
+    value = factor.eval(factor_states[factor], data)
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\patsy\eval.py", line 566, in eval
+    data)
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\patsy\eval.py", line 551, in _eval
+    inner_namespace=inner_namespace)
+
+  File "C:\ProgramData\Anaconda3\lib\site-packages\patsy\compat.py", line 43, in call_and_wrap_exc
+    exec("raise new_exc from e")
+
+  File "<string>", line 1, in <module>
+
+PatsyError: Error evaluating factor: NameError: name 'Salse' is not defined
+    Salse ~ TV+Radio+Newspaper
+    ^^^^^
+
+
+lm = smf.ols(formula='Sales ~ TV+Radio+Newspaper',data=data).fit()
+lm.conf_int()
+lm.summary()
+Out[29]: 
+<class 'statsmodels.iolib.summary.Summary'>
+"""
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  Sales   R-squared:                       0.903
+Model:                            OLS   Adj. R-squared:                  0.901
+Method:                 Least Squares   F-statistic:                     605.4
+Date:                Thu, 02 Jul 2020   Prob (F-statistic):           8.13e-99
+Time:                        12:21:21   Log-Likelihood:                -383.34
+No. Observations:                 200   AIC:                             774.7
+Df Residuals:                     196   BIC:                             787.9
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      4.6251      0.308     15.041      0.000       4.019       5.232
+TV             0.0544      0.001     39.592      0.000       0.052       0.057
+Radio          0.1070      0.008     12.604      0.000       0.090       0.124
+Newspaper      0.0003      0.006      0.058      0.954      -0.011       0.012
+==============================================================================
+Omnibus:                       16.081   Durbin-Watson:                   2.251
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               27.655
+Skew:                          -0.431   Prob(JB):                     9.88e-07
+Kurtosis:                       4.605   Cond. No.                         454.
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+"""
+
+lm = smf.ols(formula='Sales ~ TV+Radio',data=data).fit()
+lm.conf_int()
+lm.summary()
+Out[30]: 
+<class 'statsmodels.iolib.summary.Summary'>
+"""
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  Sales   R-squared:                       0.903
+Model:                            OLS   Adj. R-squared:                  0.902
+Method:                 Least Squares   F-statistic:                     912.7
+Date:                Thu, 02 Jul 2020   Prob (F-statistic):          2.39e-100
+Time:                        12:40:00   Log-Likelihood:                -383.34
+No. Observations:                 200   AIC:                             772.7
+Df Residuals:                     197   BIC:                             782.6
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      4.6309      0.290     15.952      0.000       4.058       5.203
+TV             0.0544      0.001     39.726      0.000       0.052       0.057
+Radio          0.1072      0.008     13.522      0.000       0.092       0.123
+==============================================================================
+Omnibus:                       16.227   Durbin-Watson:                   2.252
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               27.973
+Skew:                          -0.434   Prob(JB):                     8.43e-07
+Kurtosis:                       4.613   Cond. No.                         425.
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+"""
